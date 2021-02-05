@@ -16,6 +16,18 @@ const netClient = {
     SHOPP(num = 1) {
         return request(Method.GET, PATH.SHOPP + '?' + `pageNum=${num}`)
     },
+    // 修改状态
+    UPDATE_STATUS(id,status) {
+        return request(Method.GET, PATH.UPDATE_STATUS + `?productId=${id}&status=${status}`)
+    },
+    // 商品管理==详情
+    SHOP_DETAIL(id){
+        return request(Method.GET, PATH.SHOP_DETAIL + `productId=${id}`)
+    },
+    // 商品管理==添加商品
+    SAVE_SHOP(categoryId,name,subtitle,subImages,detail,price,stock,status){
+        return request(Method.GET, PATH.SAVE_SHOP + `categoryId=${categoryId}&name=${name}&subtitle=${subtitle}&subImages=${subImages}&price=${price}&stock=${stock}&status=1`)
+    },
     // 品类管理
     OTHER() {
         return request(Method.GET, PATH.OTHER + "?" + `categoryId=0`)

@@ -3,7 +3,7 @@
 
         <div class="shop">
             <span>商品管理</span>
-            <el-button type="info">+ 添加商品</el-button>
+            <el-button type="info" @click="addShop()">+ 添加商品</el-button>
         </div>
         <p></p>
         <!-- 表单 -->
@@ -32,13 +32,13 @@
             <el-table-column label="状态" width="180">
                 <template slot-scope="scope">
                     {{ scope.row.status == 2 ? "已下架" : "在售" }}
-                    <button>{{ scope.row.status == 1 ? "下架" : "上架" }}</button>
+                    <button @click="update_status(scope.row.id,scope.row.status)">{{ scope.row.status == 1 ? "下架" : "上架" }}</button>
                 </template>
             </el-table-column>
             <el-table-column prop="action" label="操作">
                 <template slot-scope="scope">
                     <el-button type="text" size="small" @click="Look(scope.row.id)">查看</el-button>
-                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button type="text" size="small" @click="editShop(scope.row.id)">编辑</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -69,10 +69,21 @@ export default {
             },
         };
     },
+    mounted() {
+        this.getlist()
+    },
     methods: {
-        // 查询
+        // 商品管理列表数据
+        getlist(){
+            this.$netClient.SHOPP().then((res) => {
+                console.log(res);
+                this.list = res.data.data.list;
+                this.total = res.data.data.total;
+            });
+        },
+        // 查询搜索
         search() {
-            console.log(this.formInline.Aid, this.formInline.user);
+            // console.log(this.formInline.Aid, this.formInline.user);
             this.$netClient.SEARCH(
                 this.formInline.Aid, 
                 this.formInline.user).then((res) => {
@@ -89,17 +100,54 @@ export default {
                 this.total = res.data.data.total;
             });
         },
+        // 上下架
+        update_status (id, status) {  //修改商品上下架状态
+            let txt = status == 1 ? '下架' : '上架';
+            this.$confirm(`确定${txt}该商品?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                status = status == 1 ? 2 : 1;
+                this.$netClient.UPDATE_STATUS(id, status).then(res => {
+                    console.log(res);
+                    this.$message({
+                        type: 'success',
+                        message: `${txt}成功!`
+                    });
+                    this.getlist();
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: `已取消${txt}`
+                });
+            });
+        },
         // 查看
         Look(id){
             console.log(id);
+            this.$router.push({
+                path:"/detail",
+                query:{
+                    id,
+                }
+            });
         },
-    },
-    mounted() {
-        this.$netClient.SHOPP().then((res) => {
-            console.log(res);
-            this.list = res.data.data.list;
-            this.total = res.data.data.total;
-        });
+        // 编辑
+        editShop(id){
+            console.log(id);
+            this.$router.push({
+                path:"/editshop",
+                query:{
+                    id,
+                }
+            });
+        },
+        // 添加商品
+        addShop(){
+            this.$router.push("/addshop");
+        }
     },
 };
 </script>

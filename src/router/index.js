@@ -25,11 +25,22 @@ const routes = [
         path: '/shop',
         component: () => import('../views/shop/shop.vue'),
         meta: { title: "商品管理" }
-      },
-      {
+      },{
         path: '/shoplist',
         component: () => import('../views/shop/shoplist.vue'),
         meta: { title: "品类管理" }
+      },{
+        path: '/addshop',
+        component: () => import('../views/shop/addshop.vue'),
+        meta: { title: "添加商品" }
+      },{
+        path: '/detail',
+        component: () => import('../views/shop/detail.vue'),
+        meta: { title: "商品详情" }
+      },{
+        path: '/editshop',
+        component: () => import('../views/shop/editshop.vue'),
+        meta: { title: "修改商品" }
       },
       {
         path: '/order',
